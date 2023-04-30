@@ -16,8 +16,7 @@ router.post('/',(req,res,next)=>{
         else{
             User.find({email:req.body.email}).exec().then(users=>{
                 if(users.length>=1){
-                    console.log("hello there");
-                    return res.status(200).json({message:"email is alredy taken"});
+                    return res.status(409 ).json({message:"email is alredy taken"});
                 }
                 else{
                     const newUser = new User({

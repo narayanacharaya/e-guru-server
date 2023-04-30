@@ -4,6 +4,7 @@ const userRouter= require("./routes/registartion")
 const loginRouter= require("./routes/login")
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
+const signupvalidtormiddleware = require("./middlewares/signupvalidation")
 console.log("connecting databse");
 
 mongoose.connect('mongodb://127.0.0.1:27017/e-guru', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -23,7 +24,7 @@ mongoose.connection.on('disconnected', () => {
 
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json());
-app.use("/registration",userRouter);
+app.use("/registration",signupvalidtormiddleware,userRouter);
 app.use("/login",loginRouter);
 
 module.exports= app;

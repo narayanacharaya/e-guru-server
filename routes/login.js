@@ -7,7 +7,7 @@ const jwt= require("jsonwebtoken")
 router.post('/',(req,res,next)=>{
     User.find({email:req.body.email}).exec().then(users=>{
         if(users.length<1){
-            return res.status(500).json({message:"email not found"});
+            return res.status(404).json({message:"email not found"});
         }
         bcrypt.compare(req.body.password,users[0].password,(err,result)=>{
             if(!result){
