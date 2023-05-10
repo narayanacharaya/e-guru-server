@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const User = require("../model/userModel");
 const mongoose = require ("mongoose");
 const jwt= require("jsonwebtoken")
-router.post('/',(req,res,next)=>{
+router.post('/',(req,res)=>{
     User.find({email:req.body.email}).exec().then(users=>{
         if(users.length<1){
             return res.status(404).json({message:"email not found"});
