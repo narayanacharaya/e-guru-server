@@ -17,11 +17,13 @@ router.post('/',(req,res)=>{
                         const token= jwt.sign({
                             username:users[0].username,
                             usertype:users[0].usertype,
-                            email:users[0].email
+                            email:users[0].email,
+                            id:users[0]._id,
                             
                         },'nepali guyz',{expiresIn:"30d"})
                         res.status(200).json({username:users[0].username,
                             usertype:users[0].usertype,
+                            id:users[0]._id,
                             email:users[0].email,
                         jwttoken:token})
             }

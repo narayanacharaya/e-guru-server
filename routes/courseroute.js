@@ -2,54 +2,36 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose')
 const Course = require('../model/courseModel')
- router.post('/',(req,res)=>{
-    const newcourse = new Course({
-        _id: new mongoose.Types.ObjectId,
-        category: 'backend  Development',
-        name: 'Node.js Basics',
-      
-        topics: [
-          {
-            name: 'Introduction to Node.js',
-            vedios: [
-              {
-                title: 'What is Node.js?',
-                url: 'https://www.youtube.com/watch?v=pU9Q6oiQNd0',
-              },
-              {
-                title: 'Node.js Installation',
-                url: 'https://www.youtube.com/watch?v=6OtTlW8jN6M',
-              },
-            ],
-            description: 'Learn the basics of Node.js and how to install it on your computer',
-            quiz: 'What is Node.js?'
-          },
-          {
-            name: 'Node.js Modules',
-            vedios: [
-              {
-                title: 'CommonJS Modules',
-                url: 'https://www.youtube.com/watch?v=FziKs8ugRdE',
-              },
-              {
-                title: 'NPM Packages',
-                url: 'https://www.youtube.com/watch?v=MBTfYt1ghN0',
-              },
-            ],
-            description: 'Learn about Node.js modules and how to use NPM packages',
-            quiz: 'What is the purpose of NPM?'
-          },
-        ],
-      });
-      
-    newcourse.save()
-  .then(savedCourse => {
-    res.json(newcourse)
-    console.log('Course saved successfully:', savedCourse);
-  })
-  .catch(err => {
-    console.error('Error saving course:', err);
+const ispublisher = require("../middlewares/ispublisher")
+ router.post('/',ispublisher,(req,res)=>{
+  const data = req.body;
+  console.log(req.id)
+  const newcourse = new Course({
+    _id: new mongoose.Types.ObjectId(),
+    author:req.id,
+    category: data.category,
+    name: data.name,
+    topics: data.topics.map(topic => ({
+      _id: new mongoose.Types.ObjectId(),
+      name: topic.name,
+      vedios: topic.vedios.map(video => ({
+        _id: new mongoose.Types.ObjectId(),
+        title: video.title,
+        url: video.url,
+      })),
+      description: topic.description,
+      quiz: topic.quiz,
+    })),
   });
+  newcourse.save()
+    .then(savedCourse => {
+      // Handle successful save
+      res.status(201).json(savedCourse);
+    })
+    .catch(error => {
+      // Handle error
+      res.status(500).json({ error: error.message });
+    });
  })
  router.get('/',(req,res)=>{
 
