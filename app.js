@@ -6,7 +6,8 @@ const signupValidatorMiddleware = require("./middlewares/signupvalidation");
 const loginRouter = require("./routes/login");
 const userRouter = require("./routes/registartion");
 const course = require("./routes/courseroute");
-app.use("/course", course);
+const auth = require("./middlewares/auth")
+
 mongoose.connect('mongodb://127.0.0.1:27017/e-guru', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(error => {
@@ -28,5 +29,5 @@ app.use(bodyParser.json());
 app.use("/login", loginRouter);
 
 app.use("/registration", signupValidatorMiddleware, userRouter);
-
+app.use("/course",auth, course);
 module.exports = app;

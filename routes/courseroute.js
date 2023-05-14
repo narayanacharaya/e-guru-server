@@ -44,6 +44,7 @@ const Course = require('../model/courseModel')
       
     newcourse.save()
   .then(savedCourse => {
+    res.json(newcourse)
     console.log('Course saved successfully:', savedCourse);
   })
   .catch(err => {
