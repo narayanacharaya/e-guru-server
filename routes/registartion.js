@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 
 router.post("/", async (req, res, next) => {
   try {
-    const { username, email, password, userType } = req.body;
+    const { username, email, password, category } = req.body;
+    
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -19,7 +20,7 @@ router.post("/", async (req, res, next) => {
       username,
       password: hashedPassword,
       email,
-      userType,
+      category,
     });
     const savedUser = await newUser.save();
     res.status(200).json({ new_user: savedUser });

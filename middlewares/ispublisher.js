@@ -10,13 +10,14 @@ const ispublisher = async (req, res, next) => {
           console.error(err);
            return  res.json(err)
         } else {
-          console.log(decodedToken)
+
           const userId = decodedToken.id;
-          console.log(userId)
+      
           const userCategory = decodedToken.category
-          
+          console.log(decodedToken)
+          console.log(userCategory)
           if(userCategory=="publisher"){
-            console.log(userCategory)
+           
             req.id=userId;
             next();
           }

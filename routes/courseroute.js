@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose')
 const Course = require('../model/courseModel')
-const ispublisher = require("../middlewares/ispublisher")
- router.post('/',ispublisher,(req,res)=>{
+const ispublisher = require("../middlewares/ispublisher");
+const { required } = require("joi");
+const coursevalidator = require("../validator/courseupdatevalidtor")
+ router.post('/',coursevalidator,ispublisher,(req,res)=>{
   const data = req.body;
   console.log(req.id)
   const newcourse = new Course({
