@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
-const userRouter= require("./routes/registartion")
-const loginRouter= require("./routes/login")
+const userRouter = require("./routes/registartion")
+const loginRouter = require("./routes/login")
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
+const cors = require("cors")
 const signupvalidtormiddleware = require("./middlewares/signupvalidation")
 const Course = require("./model/courseModel")
 console.log("connecting databse");
@@ -72,9 +73,11 @@ newcourse.save()
   .catch(err => {
     console.error('Error saving course:', err);
   });
-app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
-app.use("/registration",signupvalidtormiddleware,userRouter);
-app.use("/login",loginRouter);
+app.use(cors());
+app.options("*", cors());
+app.use("/registration", signupvalidtormiddleware, userRouter);
+app.use("/login", loginRouter);
 
-module.exports= app;
+module.exports = app;
