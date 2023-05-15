@@ -2,31 +2,31 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require("../model/userModel");
-const mongoose = require ("mongoose");
+const mongoose = require("mongoose");
 
-router.post('/',(req,res,next)=>{
+router.post('/', (req, res, next) => {
 
-    bcrypt.hash(req.body.password,10,(err,hash)=>{
-        if(err){
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+        if (err) {
             console.log(req.body.password);
             return res.status(500).json({
-                message:err
+                message: err
             });
         }
-        else{
-            User.find({email:req.body.email}).exec().then(users=>{
-                if(users.length>=1){
-                    return res.status(409 ).json({message:"email is alredy taken"});
+        else {
+            User.find({ email: req.body.email }).exec().then(users => {
+                if (users.length >= 1) {
+                    return res.status(409).json({ message: "email is alredy taken" });
                 }
-                else{
+                else {
                     const newUser = new User({
                         _id: new mongoose.Types.ObjectId,
                         username: req.body.username,
-                        password:hash,
-                        email:req.body.email,
-                        userType:req.body.userType
+                        password: hash,
+                        email: req.body.email,
+                        userType: req.body.userType
                     });
-                    
+
                     newUser.save()
                         .then(result => {
                             res.status(200).json({
@@ -45,4 +45,4 @@ router.post('/',(req,res,next)=>{
     });
 });
 
-module.exports=router;
+module.exports = router;
