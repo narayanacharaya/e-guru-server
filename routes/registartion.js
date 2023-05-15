@@ -3,46 +3,24 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../model/userModel");
 const mongoose = require("mongoose");
-const mongoose = require("mongoose");
 
-router.post('/',(req,res,next)=>{
+router.post("/", async (req, res, next) => {
+  try {
+    const { username, email, password, category } = req.body;
+    
 
-    bcrypt.hash(req.body.password,10,(err,hash)=>{
-        if(err){
-            console.log(req.body.password);
-            return res.status(500).json({
-                message:err
-            });
-        }
-        else{
-            User.find({email:req.body.email}).exec().then(users=>{
-                if(users.length>=1){
-                    return res.status(409 ).json({message:"email is alredy taken"});
-                }
-                else{
-                    const newUser = new User({
-                        _id: new mongoose.Types.ObjectId,
-                        username: req.body.username,
-                        password:hash,
-                        email:req.body.email,
-                        userType:req.body.userType
-                    });
-                    
-                    newUser.save()
-                        .then(result => {
-                            res.status(200).json({
-                                new_user: result
-                            });
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            res.status(500).json({
-                                error: err
-                            });
-                        });
-                }
-            });
-        }
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: "Email is already taken" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      _id: new mongoose.Types.ObjectId(),
+      username,
+      password: hashedPassword,
+      email,
+      category,
     });
     const savedUser = await newUser.save();
     res.status(200).json({ new_user: savedUser });
