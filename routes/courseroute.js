@@ -62,18 +62,37 @@ const coursevalidator = require("../validator/courseupdatevalidtor")
       res.status(500).json({ error: 'Internal server error' });
     });
  })
- router.delete('/:id',(req,res)=>{
+ router.delete('/:id',ispublisher,(req,res)=>{
     const courseId = req.params.id;
-  Course.findByIdAndDelete(courseId)
-    .then(deletedCourse => {
-      if (!deletedCourse) {
-        return res.status(404).json({ message: 'Course not found' });
+    
+    const authorId = req.id;
+    
+    Course.findById(courseId)
+      .then(course => {
+        if (!course) {
+          return res.status(404).json({ message: 'Course not found' });
+        }
+          console.log(authorId)
+          console.log(course)
+ 
+        if (course.author != authorId) {
+          return res.status(401).json({ message: 'Unauthorized' });
+        }
+    
+
+        Course.findByIdAndDelete(courseId)
+          .then(() => {
+            return res.json({ message: 'Course deleted successfully' });
+          })
+          .catch(err => {
+            console.error('Error deleting course:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+          });
+      })
+      .catch(err => {
+        console.error('Error finding course:', err);
+        return res.status(500).json({ message: 'Internal server error' });
       }
-      return res.json({ message: 'Course deleted successfully' });
-    })
-    .catch(err => {
-      console.error('Error deleting course:', err);
-      return res.status(500).json({ message: 'Internal server error' });
-    });
+ );
  })
  module.exports=router;

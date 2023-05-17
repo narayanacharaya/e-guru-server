@@ -1,32 +1,27 @@
 const jwt = require('jsonwebtoken');
 
 const ispublisher = async (req, res, next) => {
-
   const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  const token = authHeader.split(' ')[1];
   
-    const token = authHeader.split(' ')[1];
-    jwt.verify(token,'nepali guyz',(err, decodedToken) => {
-        if (err) {
-          console.error(err);
-           return  res.json(err)
-        } else {
+  try {
+    const decodedToken = jwt.verify(token, 'nepali guyz');
+    
+    if (decodedToken.category !== 'publisher') {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
 
-          const userId = decodedToken.id;
-      
-          const userCategory = decodedToken.category
-          console.log(decodedToken)
-          console.log(userCategory)
-          if(userCategory=="publisher"){
-           
-            req.id=userId;
-            next();
-          }
-          else{
-           return res.json({"message":"you are not registered as publisher to add course"});
-          }
-          ;}})
-
-   
+    req.id = decodedToken.id;
+    next();
+  } catch (err) {
+  //  console.error('Error verifying token:', err);
+    return res.status(500).json({ message: err });
+  }
 };
 
 module.exports = ispublisher;
