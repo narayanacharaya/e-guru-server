@@ -5,12 +5,8 @@ const validator = Joi.object({
     topics: Joi.array().min(1).items(
       Joi.object({
         name: Joi.string().required(),
-        vedios: Joi.array().min(1).items(
-          Joi.object({
-            title: Joi.string().required(),
-            url: Joi.string().uri().required()
-          })
-        ).required(),
+        vedios: Joi.array().min(1)
+        .required(),
         description: Joi.string().required(),
         // quiz: Joi.string().required()
       })

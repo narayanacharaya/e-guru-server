@@ -25,7 +25,7 @@ router.post('/',(req,res)=>{
                         },'nepali guyz',{expiresIn:"30d"})
                         res.status(200).json({username:users[0].username,
                             category:users[0].category,
-                            id:users[0]._id,
+                
                             email:users[0].email,
                         jwttoken:token})
             }

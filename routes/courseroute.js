@@ -5,36 +5,50 @@ const Course = require('../model/courseModel')
 const ispublisher = require("../middlewares/ispublisher");
 const { required } = require("joi");
 const coursevalidator = require("../validator/courseupdatevalidtor")
- router.post('/',coursevalidator,ispublisher,(req,res)=>{
-  const data = req.body;
-  console.log(req.id)
-  const newcourse = new Course({
-    _id: new mongoose.Types.ObjectId(),
-    author:req.id,
-    category: data.category,
-    name: data.name,
-    topics: data.topics.map(topic => ({
-      _id: new mongoose.Types.ObjectId(),
-      name: topic.name,
-      vedios: topic.vedios.map(video => ({
-        _id: new mongoose.Types.ObjectId(),
-        title: video.title,
-        url: video.url,
-      })),
-      description: topic.description,
-      quiz: topic.quiz,
-    })),
-  });
-  newcourse.save()
-    .then(savedCourse => {
-      // Handle successful save
-      res.status(201).json(savedCourse);
+ router.post('/',ispublisher,async (req,res)=>{
+  try {
+    // Extract the data from the request body
+    const { level, description, thumbnail, category, name,topics, price } = req.body;
+    topics.map((topic)=>{
+      console.log(topic)
     })
-    .catch(error => {
-      // Handle error
-      res.status(500).json({ error: error.message });
+    // Create a new Course instance with the extracted data
+    const newCourse = new Course({
+      _id: new mongoose.Types.ObjectId(),
+      author:req.id,
+      level,
+      description,
+      thumbnail,
+      category,
+      name,
+
+      topics: topics.map((topic)=>({
+        _id: new mongoose.Types.ObjectId(),
+        name: topic.name,
+        videos: topic.videos.map((video) => ({
+          _id: new mongoose.Types.ObjectId(),
+          title: video.title,
+          url: video.url,
+          quiz: video.quiz
+        })),
+        description: topic.description,
+        quiz: topic.quiz
+      })),
+      price
     });
- })
+    console.log(newCourse)
+
+   // Save the new course to the database
+    const savedCourse = await  newCourse.save();
+
+   res.status(201).json(savedCourse);
+  } catch (error) {
+    console.error('Error creating course:', error);
+    res.status(500).json({ error: error});
+  }
+  });
+
+ 
  router.get('/',(req,res)=>{
 
     Course.find().limit(10)
@@ -51,6 +65,7 @@ const coursevalidator = require("../validator/courseupdatevalidtor")
 
 
   Course.findById(req.params.id)
+  .populate('author', 'username profilePicture description')
     .then(course => {
       if (!course) {
         return res.status(404).json({ error: 'Course not found' });
