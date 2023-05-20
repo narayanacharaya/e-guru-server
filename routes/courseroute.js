@@ -77,7 +77,13 @@ router.post('/', ispublisher, async (req, res) => {
     // Find the course by its ID
     Course.findById(req.params.id)
       // Populate the 'author' field and specify the fields to include: 'username', 'profilePicture', and 'description'
-      .populate('author', 'username profilePicture description')
+      .populate('author','username profilePicture description').populate({
+        path: 'reviews',
+        populate: {
+          path: 'user',
+          select: 'username' // Exclude the 'password' field from the user information
+        }
+      })
       .then(course => {
         if (!course) {
           return res.status(404).json({ error: 'Course not found' });

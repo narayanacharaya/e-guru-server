@@ -4,7 +4,7 @@ const isPublisher = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   // Check if the Authorization header is present and starts with 'Bearer '
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader || !authHeader.startsWith('Bearer')) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
@@ -20,7 +20,7 @@ const isPublisher = async (req, res, next) => {
     }
 
     // Assign the decoded token's id to req.id for future use
-    req.id = decodedToken.id;
+    
     next();
   } catch (err) {
     console.error('Error verifying token:', err);

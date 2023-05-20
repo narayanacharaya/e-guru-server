@@ -3,7 +3,7 @@ const User = require('./userModel');
 const { Schema } = mongoose;
 const reviewSchema = mongoose.Schema(
   {
-    name: { type: String, required: true },
+   // name: { type: String, required: true },
     rating: { type: Number, required: true },
     comment: { type: String, required: true },
     user: {
@@ -87,7 +87,7 @@ const courseModel = new mongoose.Schema({
   author: {
     type: Schema.Types.ObjectId,
     ref: 'User', // Use the model name 'User' here
-    // required: true
+     required: true
   },
   topics: {
     type: [topicSchema],
@@ -118,6 +118,11 @@ const courseModel = new mongoose.Schema({
     required: true,
     default: 0,
   },
+  numnberofenroll:{
+    type:Number,
+    required:true,
+    default:0
+  }
  
 } ,{
   timestamps: true // Add timestamps option

@@ -8,7 +8,9 @@ const verification = async (req, res, next) => {
 
   try {
     const token = authHeader.split(' ')[1]; // Extract the token from the Authorization header
-    jwt.verify(token, 'nepali guyz'); // Verify the token using the provided secret key
+    const decodedToken = jwt.verify(token, 'nepali guyz');// Verify the token using the provided secret key
+    req.id = decodedToken.id;//sending an id
+    req.name= decodedToken.username;
     next(); // Call the next middleware or route handler
   } catch (error) {
     console.error(error);
