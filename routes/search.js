@@ -5,36 +5,36 @@ const searchCourses = async (req, res) => {
   try {
     const { name, category, level, price } = req.query;
 
-    // Create an empty filter object
+    // Create a filter object to store the search criteria
     const filter = {};
 
-    // Check if name query parameter is provided
+    // Add the name search criteria to the filter
     if (name) {
       filter.name = { $regex: name, $options: 'i' };
     }
 
-    // Check if level query parameter is provided
+    // Add the level search criteria to the filter
     if (level) {
       filter.level = level;
     }
 
-    // Check if price query parameters are provided and are valid numbers
-    if (price) {
-      if (price.lte && !isNaN(price.lte)) {
-        filter.price = { $lte: parseFloat(price.lte) };
-      }
-      if (price.gte && !isNaN(price.gte)) {
-        filter.price = { ...filter.price, $gte: parseFloat(price.gte) };
-      }
+    // Add the price search criteria to the filter
+    if (price && !isNaN(price.lte)) {
+      filter.price = { $lte: parseFloat(price.lte) };
+    }
+    if (price && !isNaN(price.gte)) {
+      filter.price = { ...filter.price, $gte: parseFloat(price.gte) };
     }
 
-    // Check if category query parameter is provided
+    // Add the category search criteria to the filter
     if (category) {
       filter.category = category;
     }
 
     // Query the database with the filters
-    const courses = await Course.find(filter);
+    const courses = await Course.find(filter)
+      .populate('author', 'username') // Only populate the 'author' field with the 'username' property
+      .select('name thumbnail author level'); // Select only the 'name', 'thumbnail', 'author', and 'level' fields
 
     res.json(courses);
   } catch (error) {
@@ -42,6 +42,7 @@ const searchCourses = async (req, res) => {
     res.status(500).json({ error: error });
   }
 };
+
 router.get('/',searchCourses)
 
   module.exports= router;
