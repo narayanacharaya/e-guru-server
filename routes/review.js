@@ -20,6 +20,7 @@ router.post('/:id',async (req, res) => {
       if(!rating){
         return res.status(401).json({"message":"rating is required"})
       }
+      console.log(comment);
       if(!comment){
         return res.status(401).json({"message":"comment  is required"}) 
       }

@@ -83,7 +83,7 @@ router.post('/', ispublisher, async (req, res) => {
           path: 'user',
           select: 'username' // Exclude the 'password' field from the user information
         }
-      })
+      }).populate({ path: 'category', model: 'Category' })
       .then(course => {
         if (!course) {
           return res.status(404).json({ error: 'Course not found' });

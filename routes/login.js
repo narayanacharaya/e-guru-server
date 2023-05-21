@@ -27,6 +27,7 @@ router.post('/', (req, res) => {
   
             // Return user information and the generated JWT token
             res.status(200).json({
+              id: users[0]._id,
               username: users[0].username,
               category: users[0].category,
               email: users[0].email,
