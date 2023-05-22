@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const User = require("../model/userModel");
 const mongoose = require ("mongoose");
 const jwt= require("jsonwebtoken")
+const auth = require("../middlewares/auth")
 router.post('/', (req, res) => {
     // Find the user by email
     User.find({ email: req.body.email }).exec()
@@ -40,4 +41,24 @@ router.post('/', (req, res) => {
         res.status(500).json({ error: err });
       });
   });
+  router.get('/',auth,async(req,res)=>{
+  await  User.findById(req.id).then((user)=>{
+      console.log(user);
+      if (!user) {
+
+        return res.status(404).json({ message: "account  not found" });
+      }
+      else{
+        return res.status(200).json(
+          {
+            id: user._id,
+              username: user.username,
+              category: user.category,
+              email: user.email,
+          }
+        )
+      }
+   
+    })
+  })
 module.exports=router

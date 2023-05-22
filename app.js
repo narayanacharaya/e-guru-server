@@ -10,7 +10,7 @@ const auth = require("./middlewares/auth")
 const searchCourses = require('./routes/search')
 const review = require('./routes/review')
 const category = require('./routes/categories')
-
+//mongodb+srv://acharayanarayan01:cbWYI2jVGeqNfDsP@cluster0.48ymwaj.mongodb.net/?retryWrites=true&w=majority
 mongoose.connect('mongodb://127.0.0.1:27017/e-guru', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(error => {
