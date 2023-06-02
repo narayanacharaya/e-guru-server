@@ -11,7 +11,8 @@ const searchCourses = async (req, res) => {
 
     // Add the name search criteria to the filter
     if (name) {
-      filter.name = { $regex: name, $options: 'i' };
+      const regex = new RegExp(`.*${name.trim()}.*`, "i");
+      filter.name = regex;
     }
 
     // Add the level search criteria to the filter
