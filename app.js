@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const signupValidatorMiddleware = require("./validator/signupvalidation");
 const loginRouter = require("./routes/login");
 const userRouter = require("./routes/registartion");
@@ -26,16 +27,19 @@ mongoose.connection.on('disconnected', () => {
   console.log('MongoDB disconnected');
 });
 
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(cors());
+app.options("http://localhost:5173/", cors());
 
 app.use("/login", loginRouter);
 
 app.use("/registration", signupValidatorMiddleware, userRouter);
-app.use("/course",auth, course);
+app.use("/course", auth, course);
 app.use('/Searchcourses', searchCourses);
-app.use('/review',auth,review );
-app.use('/category',auth,category);
+app.use('/review', auth, review);
+app.use('/category', auth, category);
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
