@@ -37,8 +37,8 @@ const searchCourses = async (req, res) => {
     // Query the database with the filters
     const courses = await Course.find(filter)
       .populate('author', 'username') // Only populate the 'author' field with the 'username' property
-      .select('name thumbnail author level'); // Select only the 'name', 'thumbnail', 'author', and 'level' fields
-    console.log(courses)
+      .select('name thumbnail author level price'); // Select only the 'name', 'thumbnail', 'author', and 'level' fields
+  
     res.json(courses);
   } catch (error) {
     console.error('Error searching courses:', error);
