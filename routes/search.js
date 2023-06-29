@@ -31,7 +31,7 @@ const searchCourses = async (req, res) => {
     // Add the category search criteria to the filter
     if (category) {
       console.log(category)
-      filter.category =category.split(' ')[0];
+      filter.category =category.trim();
     }
    console.log(filter) 
     // Query the database with the filters
