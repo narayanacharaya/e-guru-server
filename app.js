@@ -38,10 +38,10 @@ app.use("/login", loginRouter);
 
 app.use("/registration", signupValidatorMiddleware, userRouter);
 app.use("/course", auth, course);
-app.use('/Searchcourses',auth, searchCourses);
+app.use('/Searchcourses', auth, searchCourses);
 app.use('/review', auth, review);
 app.use('/category', auth, category);
-app.use('/tetsing', testingrouter)
+app.use('/testing', testingrouter)
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });

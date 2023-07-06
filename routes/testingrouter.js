@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const Video = require('../model/testing vedio');
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: 'uploads/' });  
 
 router.post('/', upload.single('video'), async (req, res) => {
   // Extract video details from the request
