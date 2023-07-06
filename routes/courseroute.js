@@ -69,12 +69,13 @@ router.post('/', ispublisher, async (req, res) => {
       })
       .catch(err => {
         console.error('Error retrieving courses:', err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: err });
       });
   });
 
   router.get('/:id', (req, res) => {
-    // Find the course by its ID
+    console.log(req.params.id)
+  //  Find the course by its ID
     Course.findById(req.params.id)
       // Populate the 'author' field and specify the fields to include: 'username', 'profilePicture', and 'description'
       .populate('author','username profilePicture description').populate({
