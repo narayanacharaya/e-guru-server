@@ -34,4 +34,19 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: error });
   }
 });
+router.get('/', async (req, res) => {
+    try {
+        const user = await User.findById(req.id).populate('transaction.courseId','name');// Replace req.id with the actual user's ID
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      console.log(user.transaction); // Check if the transactions are being fetched correctly
+  
+      return res.status(200).json({ transaction: user.transaction});
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred' });
+    }
+  });
 module.exports=router;
