@@ -12,6 +12,7 @@ const searchCourses = require('./routes/search')
 const review = require('./routes/review')
 const category = require('./routes/categories')
 const testingrouter = require('./routes/testingrouter')
+const Paymentroute= require('./routes/paymentsroutes')
 //mongodb+srv://acharayanarayan01:cbWYI2jVGeqNfDsP@cluster0.48ymwaj.mongodb.net/?retryWrites=true&w=majority
 mongoose.connect('mongodb+srv://acharayanarayan01:cbWYI2jVGeqNfDsP@cluster0.48ymwaj.mongodb.net/e-guru?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
@@ -42,6 +43,7 @@ app.use('/Searchcourses', auth, searchCourses);
 app.use('/review', auth, review);
 app.use('/category', auth, category);
 app.use('/testing', testingrouter)
+app.use('/payment',auth,Paymentroute)
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });

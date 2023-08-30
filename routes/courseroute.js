@@ -54,18 +54,22 @@ router.post('/', ispublisher, async (req, res) => {
 
  
   router.get('/', (req, res) => {
-    Course.find().limit(10)
+    Course.find().limit(12)
       .populate('author', 'username') // Only populate the 'author' field with the 'name' property
-      .select('name thumbnail author level') // Select only the 'name', 'thumbnail', and 'author' fields
+      .select('name thumbnail author level price') // Select only the 'name', 'thumbnail', and 'author' fields
       .then(courses => {
+  
         const simplifiedCourses = courses.map(course => ({
+       
           id :course.id,
           name: course.name,
           thumbnail: course.thumbnail,
           level:course.level,
+          price:course.price,
           author: course.author ? course.author.username : '' // Check if author is null before accessing its properties
         }));
-        res.json(simplifiedCourses);
+        
+        res.json(courses);
       })
       .catch(err => {
         console.error('Error retrieving courses:', err);
@@ -74,7 +78,7 @@ router.post('/', ispublisher, async (req, res) => {
   });
 
   router.get('/:id', (req, res) => {
-    console.log(req.params.id)
+
   //  Find the course by its ID
     Course.findById(req.params.id)
       // Populate the 'author' field and specify the fields to include: 'username', 'profilePicture', and 'description'
