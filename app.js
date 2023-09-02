@@ -13,6 +13,7 @@ const review = require('./routes/review')
 const category = require('./routes/categories')
 const testingrouter = require('./routes/testingrouter')
 const Paymentroute= require('./routes/paymentsroutes')
+const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hcmF5YW4iLCJjYXRlZ29yeSI6InB1Ymxpc2hlciIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWQiOiI2NDYxYWJjMjkzNzhkMWUxMzBmYjE2YmEiLCJpYXQiOjE2OTI4NzAyMjMsImV4cCI6MTY5NTQ2MjIyM30.X1ontC1cJIvP8k6u9O_1FAh9tMCyfFWmo4ZiiWqqais';
 //mongodb+srv://acharayanarayan01:cbWYI2jVGeqNfDsP@cluster0.48ymwaj.mongodb.net/?retryWrites=true&w=majority
 mongoose.connect('mongodb+srv://acharayanarayan01:cbWYI2jVGeqNfDsP@cluster0.48ymwaj.mongodb.net/e-guru?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
@@ -20,7 +21,7 @@ mongoose.connect('mongodb+srv://acharayanarayan01:cbWYI2jVGeqNfDsP@cluster0.48ym
     console.error('Error connecting to MongoDB:', error.message);
     process.exit(1);
   });
-
+  const fs = require('fs');
 mongoose.connection.on('error', error => {
   console.error('MongoDB connection error:', error.message);
 });

@@ -18,6 +18,7 @@ router.post('/', ispublisher, async (req, res) => {
     const totalVideos = topics.reduce((total, topic) => total + topic.videos.length, 0);
 
     // Create a new Course instance with the extracted data and totalVideos
+    console.log(req.id)
     const newCourse = new Course({
       _id: new mongoose.Types.ObjectId(),
       author: req.id,
