@@ -3,46 +3,46 @@ import pandas as pd
 import neattext.functions as nfx
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import pickle
 
 app = Flask(__name__)
 
 # Load the dataset and preprocess it
-df = pd.read_csv("udemy_courses.csv")
-df['clean_course_title'] = df['course_title'].apply(nfx.remove_stopwords)
-df['clean_course_title'] = df['clean_course_title'].apply(nfx.remove_special_characters)
+df = pd.read_csv("courses.csv", encoding='latin1')
+df['clean_course_name'] = df['name'].apply(nfx.remove_stopwords)  # Use 'name' instead of 'course_title'
+df['clean_course_name'] = df['clean_course_name'].apply(nfx.remove_special_characters)
 
 # Vectorize the text using CountVectorizer
 count_vect = CountVectorizer()
-cv_mat = count_vect.fit_transform(df['clean_course_title'])
+cv_mat = count_vect.fit_transform(df['clean_course_name'])
 
-# Calculate the cosine similarity matrix
+# Calculate the cosine similarity matrix for course names
 cosine_sim_mat = cosine_similarity(cv_mat)
 
-# Create a mapping of course titles to indices
-course_indices = pd.Series(df.index, index=df['course_title']).drop_duplicates()
-
-# Load the recommendation model from the .pkl file
-# with open('recommendation_model.pkl', 'rb') as model_file:
-#     model_data = pickle.load(model_file)
-#     cosine_sim_mat = model_data['cosine_sim_mat']
-#     course_indices = model_data['course_indices']
+# Create a mapping of course names to indices
+course_indices = pd.Series(df.index, index=df['name']).drop_duplicates()
 
 @app.route('/recommend', methods=['POST'])
 def get_recommendations():
     data = request.get_json()
-    title = data.get('title')
+    name = data.get('name')
     num_of_rec = data.get('num_of_rec', 10)
     
-    recommended_courses = recommend_course(title, num_of_rec)
+    recommended_courses = recommend_course(name, num_of_rec)
     
-    # Add 'course_id' to the recommended courses
-    recommended_courses['course_id'] = recommended_courses.index
+    # Create a list of recommendations with name, _id, thumbnail, and author
+    recommendations = []
+    for _, row in recommended_courses.iterrows():
+        recommendations.append({
+            'name': row['name'],
+            '_id': row['_id'],
+            'thumbnail': row['thumbnail'],
+            'author': row['author']
+        })
     
-    return jsonify(recommended_courses.to_dict(orient='records'))
+    return jsonify(recommendations)
 
-def recommend_course(title, num_of_rec=10):
-    idx = course_indices[title]  # Get the index of the given course title
+def recommend_course(name, num_of_rec=10):
+    idx = course_indices[name]  # Get the index of the given course name
     scores = list(enumerate(cosine_sim_mat[idx]))  # List of cosine similarity scores for the course
     sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)  # Sort scores in descending order
 
@@ -50,8 +50,8 @@ def recommend_course(title, num_of_rec=10):
     selected_course_indices = [i[0] for i in sorted_scores[1:num_of_rec+1]]
     selected_course_scores = [i[1] for i in sorted_scores[1:num_of_rec+1]]
 
-    # Get the recommended course titles based on selected indices
-    recommended_result = df['course_title'].iloc[selected_course_indices]
+    # Get the recommended course details including '_id', 'thumbnail', and 'author'
+    recommended_result = df[['name', '_id', 'thumbnail', 'author']].iloc[selected_course_indices]
     
     # Create a DataFrame with recommended courses and their similarity scores
     rec_df = pd.DataFrame(recommended_result)
